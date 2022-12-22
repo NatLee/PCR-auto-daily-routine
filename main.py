@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from pathlib import Path
+import time
 
 import cv2
 import numpy as np
@@ -23,7 +24,7 @@ def mouse_move(x, y, click=True):
     mouse.move(original_x, original_y, absolute=True)
     return
 
-def get_pts(image, pattern, threshold=0.7):
+def get_pts(image, pattern, threshold=0.7) -> list:
     # 獲得對應物件的位置
     pattern = cv2.cvtColor(pattern, cv2.COLOR_BGR2GRAY)
     w, h = pattern.shape[::-1]
@@ -47,16 +48,29 @@ def get_center_pt(*pt):
 
 img_paths = [img for img in Path('./img').glob('*.png')]
 
-for img_path in img_paths:
-    screenshot = get_screenshot()
-    pattern = cv2.imread(img_path.absolute().as_posix())
-    pts = get_pts(screenshot, pattern)
-    if not pts:
-        continue
-    else:
-        pt = pts[0]
-        print(f'---- Find [{img_path}]')
+def wait_until_pattern(pattern, timeout):
+    start_time = time.time()
+    pts = []
+    screenshot = None
+    count = 1
+    while not pts and (time.time() - start_time) <= timeout:
+        print(f"Waiting count: {count}")
+        count += 1
+        screenshot = get_screenshot()
+        pts = get_pts(screenshot, pattern)
+    return pts, screenshot
 
+
+for img_path in img_paths:
+    pattern = cv2.imread(img_path.absolute().as_posix())
+    pts, screenshot = wait_until_pattern(pattern, timeout=3)
+    if pts:
+        print(f'---- Find [{img_path}]')
+    else:
+        print(f'---- Timeout [{img_path}]')
+        continue
+
+    pt = pts[0]
     x1, y1, x2, y2 = pt
 
     cv2.rectangle(
