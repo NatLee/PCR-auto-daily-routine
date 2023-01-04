@@ -6,6 +6,8 @@ Version with Traditional Chinese.
 
 > Work in progress!!!
 
+![back-to-home](./docs/back-to-home-demo.gif)
+
 ## Requirement
 
 ```bash
