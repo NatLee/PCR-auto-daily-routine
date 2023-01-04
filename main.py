@@ -9,29 +9,13 @@ import numpy as np
 import mss
 import mouse
 
-func_buttons = ['home', 'advan']
-
-function_img_map = {}
-
-for func_button in func_buttons:
-    function_img_map[func_button] = {
-        'origin': f'./img/{func_button}-button.png',
-        'clicked': f'./img/{func_button}-clicked.png'
-    }
-
-def get_function_img_pattern(func):
-    origin = function_img_map[func]['origin']
-    origin_pattern = cv2.imread(origin)
-    clicked = function_img_map[func]['clicked']
-    clicked_pattern = cv2.imread(clicked)
-    return origin_pattern, clicked_pattern
-
 def get_screenshot(default_monitor_number=0):
     with mss.mss() as sct:
         monitor = sct.monitors[default_monitor_number] # 預設擷取全螢幕
         screenshot = np.array(sct.grab(monitor))
         screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
     return screenshot
+
 
 def mouse_move(x, y, click=True):
     original_x, original_y = mouse.get_position()
@@ -63,29 +47,49 @@ def get_center_pt(*pt):
     x1, y1, x2, y2 = pt
     return ((x1+x2)//2, (y1+y2)//2)
 
-def wait_until_pattern(pattern, timeout):
-    start_time = time.time()
-    pts = []
-    screenshot = None
-    count = 1
-    while not pts and (time.time() - start_time) <= timeout:
-        print(f"Waiting count: {count}")
-        count += 1
+
+class Button:
+    def __init__(self, pattern_path):
+        self.pattern_path = pattern_path
+        self.pattern = self.load_pattern()
+
+    def load_pattern(self):
+        return cv2.imread(self.pattern_path)
+
+    def detect(self):
         screenshot = get_screenshot()
-        pts = get_pts(screenshot, pattern)
-    return pts, screenshot
+        pts = get_pts(screenshot, self.pattern)
+        if pts:
+            print(f'---- Find [{self.pattern_path}]')
+        return pts, screenshot
+
+    def wait_until(self, timeout):
+        print(f"---- Wait [{self.pattern_path}]")
+        start_time = time.time()
+        pts = []
+        screenshot = None
+        count = 1
+        while not pts and (time.time() - start_time) <= timeout:
+            print(f"Waiting count: {count}")
+            count += 1
+            pts, screenshot = self.detect()
+        if not pts:
+            print(f'---- Timeout [{self.pattern_path}]')
+        return pts, screenshot
+
 
 def back_to_home() -> bool:
     print("---- 執行回到主頁")
-    origin_pattern, clicked_pattern = get_function_img_pattern('home')
-    pts, screenshot = wait_until_pattern(origin_pattern, timeout=3)
+    home_before = Button('./img/home-before.png')
+    home_after = Button('./img/home-after.png')
+
+    pts, screenshot = home_before.wait_until(3)
     if pts:
         pt = pts[0]
         x, y = get_center_pt(pt)
         mouse_move(x, y)
         return True
-
-    pts, screenshot = wait_until_pattern(clicked_pattern, timeout=1)
+    pts, screenshot = home_after.wait_until(1)
     if pts:
         print('---- 已經在Home頁面')
     else:
@@ -93,16 +97,11 @@ def back_to_home() -> bool:
     return False
 
 def debug():
-
     img_paths = [img for img in Path('./img').glob('*.png')]
-
     for img_path in img_paths:
-        pattern = cv2.imread(img_path.absolute().as_posix())
-        pts, screenshot = wait_until_pattern(pattern, timeout=3)
-        if pts:
-            print(f'---- Find [{img_path}]')
-        else:
-            print(f'---- Timeout [{img_path}]')
+        button = Button(img_path.as_posix())
+        pts, screenshot = button.wait_until(timeout=3)
+        if not pts:
             continue
 
         pt = pts[0]
@@ -125,7 +124,7 @@ def debug():
         cv2.imshow(f"{img_path}", screenshot_)
         cv2.waitKey()
 
-
 if __name__ == '__main__':
+    #debug()
     back_to_home()
 
