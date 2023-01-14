@@ -8,6 +8,8 @@ Version with Traditional Chinese.
 
 ![back-to-home](./docs/back-to-home-demo.gif)
 
+![skip-scene](./docs/skip-scene-demo.gif)
+
 ## Requirement
 
 ```bash
