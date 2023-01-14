@@ -10,6 +10,8 @@ Version with Traditional Chinese.
 
 ![skip-scene](./docs/skip-scene-demo.gif)
 
+![gachapon](./docs/gachapon-demo.gif)
+
 ## Requirement
 
 ```bash
