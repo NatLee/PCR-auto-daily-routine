@@ -10,11 +10,15 @@ Version with Traditional Chinese.
 
 - Skip scene
 
-![skip-scene](./docs/skip-scene-demo.gif)
+![skip-scene-demo](./docs/skip-scene-demo.gif)
 
 - Skip gachapon and explorer
 
-![skip-gachapon-explorer](./docs/skip-gachapon-explorer-demo.mp4)
+[![skip-gachapon-explorer-demo]](./docs/skip-gachapon-explorer-demo.mp4)
+
+- Skip failed when it has already solved
+
+[![skip-failed-demo]](./docs/skip-failed-demo.mp4)
 
 ## Requirement
 
