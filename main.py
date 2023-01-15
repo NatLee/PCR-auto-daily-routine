@@ -315,8 +315,14 @@ def action_explorer(after_wait_sec=3) -> bool:
     mouse_move(x, y)
     print("---- 已點擊使用2張券按鈕")
 
-    if not ok(timeout=5):
+    back_explorer_button = Button('./img/back-explorer.png')
+    pts = back_explorer_button.wait_until(3)
+    if not pts.is_valid():
+        print("---- 找不到返回探索TOP")
         return False
+    x, y = pts.get_center_pt()
+    mouse_move(x, y)
+    print("---- 已點擊返回探索TOP按鈕")
 
     time.sleep(after_wait_sec)
 
@@ -379,6 +385,6 @@ if __name__ == '__main__':
     #action_skip_scene()
 
     # daily routine
-    #action_free_gachapon()
-    #action_explorer()
+    action_free_gachapon()
+    action_explorer()
     action_dungeon()
