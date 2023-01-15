@@ -6,11 +6,15 @@ Version with Traditional Chinese.
 
 > Work in progress!!!
 
-![back-to-home](./docs/back-to-home-demo.gif)
+## Demo
+
+- Skip scene
 
 ![skip-scene](./docs/skip-scene-demo.gif)
 
-![gachapon](./docs/gachapon-demo.gif)
+- Skip gachapon and explorer
+
+![skip-gachapon-explorer](./docs/skip-gachapon-explorer-demo.mp4)
 
 ## Requirement
 
