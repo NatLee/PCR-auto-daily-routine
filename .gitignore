@@ -1,4 +1,5 @@
 
+PCR-*.git
 
 __pycache__
 
@@ -6,5 +7,7 @@ desktop.ini
 
 .DS_Store
 
+*.jar
 
+*-report
 
