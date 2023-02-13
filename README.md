@@ -4,7 +4,13 @@
 
 Version with Traditional Chinese.
 
-> Work in progress!!!
+> Now, it has automatically scheduler `予定帳` in the system.
+
+![](https://user-images.githubusercontent.com/10178964/218356455-5f146300-ea39-4ab4-8020-05e0fa4d3fe4.png)
+
+> We don't need make it ourself anymore.
+
+> Or you can find more completed scripts here -> https://github.com/Gibberer/pcr-script
 
 ## Demo
 
